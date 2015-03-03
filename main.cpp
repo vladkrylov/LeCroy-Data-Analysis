@@ -7,15 +7,17 @@
 #include "TFile.h"
 #include "TTree.h"
 #include "TRandom.h"
+#include "TGraph.h"
 
-typedef double values_t;
+#include "Waveform.h"
 
 using namespace std;
 
 const int linesToSkip = 5;
 const int numberOfSignalPoints = 4002;
 
-void testFill(vector<values_t> &vec, double mean, double sgm);
+void testVectorFill(vector<double> &vec, double mean, double sgm);
+void testWaveformFill(Waveform *wf, double mean, double sgm);
 
 int main(int argc, char **argv)
 {
@@ -29,18 +31,32 @@ int main(int argc, char **argv)
 	string line;
 	ifstream f(inpFileName);
 
-	values_t t, v;
-	vector<values_t> ts;
-	vector<values_t> vs;
+	double t, v;
+	vector<double> ts;
+	vector<double> vs;
 
 	ts.reserve(numberOfSignalPoints);
 	vs.reserve(numberOfSignalPoints);
 
 	TFile rootFile("Data.root","RECREATE");
 	TTree *tree = new TTree("T","An example of a ROOT tree");
-	tree->Branch("test", &vs);
-	testFill(vs, 0, 1.5);
-	tree->Fill();
+
+//	Test for tbranch with vector
+//
+//	tree->Branch("test", "vector<double>", &vs);
+//	for (double mean=0.; mean<5.2; mean += 0.5) {
+//		testVectorFill(vs, mean, 0.5);
+//		tree->Fill();
+//	}
+	Waveform *wf = new Waveform(numberOfSignalPoints);
+	tree->Branch("test", "Waveform", &wf);
+
+	for (double mean=0.; mean<5.2; mean += 0.5) {
+		wf->Init(numberOfSignalPoints, "test");
+		testWaveformFill(wf, mean, 0.5);
+		tree->Fill();
+	}
+
 
 //	int counter = 0;
 //	if (f.is_open()) {
@@ -71,18 +87,28 @@ int main(int argc, char **argv)
 //	}
 
 	tree->Write();
+
+	delete tree;
+	delete wf;
+
 	cout << "Done." << endl;
 	return 0;
 }
 
-void testFill(vector<values_t> &vec, double mean, double sgm)
+void testVectorFill(vector<double> &vec, double mean, double sgm)
 {
 	vec.clear();
 
 	TRandom r;
-	for(int i=0; i<100; i++) {
+	for(int i=0; i<1000; i++) {
 		vec.push_back(r.Gaus(mean, sgm));
 	}
 }
 
-
+void testWaveformFill(Waveform *wf, double mean, double sgm)
+{
+	TRandom r;
+	for(int i=0; i<1000; i++) {
+		wf->AddPoint(i, r.Gaus(mean, sgm));
+	}
+}
