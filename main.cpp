@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 	TFile rootFile("Data.root","RECREATE");
 	TTree *tree = new TTree("T","An example of a ROOT tree");
 	tree->Branch("test", &vs);
-	testFill(vs, 0, 0);
+	testFill(vs, 0, 1.5);
 	tree->Fill();
 
 //	int counter = 0;
@@ -71,6 +71,7 @@ int main(int argc, char **argv)
 //	}
 
 	tree->Write();
+	cout << "Done." << endl;
 	return 0;
 }
 
