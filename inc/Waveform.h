@@ -8,7 +8,7 @@
 
 using namespace std;
 
-class Waveform {
+class Waveform : public TObject {
 public:
 	Waveform(int assumedNumberOfPoints = 0);
 	Waveform(int assumedNumberOfPoints, const char *fname);

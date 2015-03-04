@@ -4,7 +4,7 @@
 
 ClassImp(Waveform)
 
-Waveform::Waveform(int assumedNumberOfPoints) {
+Waveform::Waveform(int assumedNumberOfPoints) : TObject() {
 	Init(assumedNumberOfPoints);
 }
 
