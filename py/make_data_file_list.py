@@ -43,7 +43,7 @@ def save_file_list(data_dir=None, out_filename="data_files.txt", patt="C\d+_FBLM
  
        
 if __name__ == "__main__":
-    pat = re.compile("C\d+_FBLM_\d+_00000\.txt")
+    pat = re.compile("C[23]_FBLM_\d+_00000\.txt")
     
     data_dir = None
     opts, args = getopt.getopt(sys.argv[1:], 'd:', [])
@@ -55,7 +55,7 @@ if __name__ == "__main__":
             else:
                 data_dir = a
                 
-    save_file_list(data_dir=data_dir)
+    save_file_list(data_dir=data_dir, patt=pat)
 
 
 

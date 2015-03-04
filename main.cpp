@@ -32,11 +32,11 @@ int main(int argc, char **argv)
 	ifstream f(inpFileName);
 
 	double t, v;
-	vector<double> ts;
-	vector<double> vs;
-
-	ts.reserve(numberOfSignalPoints);
-	vs.reserve(numberOfSignalPoints);
+//	vector<double> ts;
+//	vector<double> vs;
+//
+//	ts.reserve(numberOfSignalPoints);
+//	vs.reserve(numberOfSignalPoints);
 
 	TFile rootFile("Data.root","RECREATE");
 	TTree *tree = new TTree("T","An example of a ROOT tree");
@@ -48,43 +48,44 @@ int main(int argc, char **argv)
 //		testVectorFill(vs, mean, 0.5);
 //		tree->Fill();
 //	}
+
+
 	Waveform *wf = new Waveform(numberOfSignalPoints);
-	tree->Branch("test", "Waveform", &wf);
+	tree->Branch("Waveforms", "Waveform", &wf);
 
-	for (double mean=0.; mean<5.2; mean += 0.5) {
-		wf->Init(numberOfSignalPoints, "test");
-		testWaveformFill(wf, mean, 0.5);
-		tree->Fill();
-	}
-
-
-//	int counter = 0;
-//	if (f.is_open()) {
-//		// loop through all data files
-//		while ( getline(f, currentDataFileName) ) {
-//			ifstream currentDataFile(currentDataFileName.c_str());
-//			if (currentDataFile.is_open()) {
-//				cout << ++counter << " Processing "<< currentDataFileName << endl;
-//				// skip lines that don't contain signal data
-//				for (int i=0; i<linesToSkip; i++) {
-//					getline(currentDataFile, line);
-//				}
-//
-//				ts.clear();
-//				vs.clear();
-//
-//				while (getline(currentDataFile, line)) {
-//					sscanf(line.c_str(), "%lf,%lf", &t, &v);
-//					ts.push_back(t);
-//					vs.push_back(v);
-//
-//
-//				}
-//				currentDataFile.close();
-//			}
-//		}
-//		f.close();
+//	for (double mean=0.; mean<50.2; mean += 0.5) {
+//		wf->Init(numberOfSignalPoints, "test");
+//		testWaveformFill(wf, mean, 0.5);
+//		wf->CalculateParameters();
+//		tree->Fill();
 //	}
+
+
+	int counter = 0;
+	if (f.is_open()) {
+		// loop through all data files
+		while ( getline(f, currentDataFileName) ) {
+			ifstream currentDataFile(currentDataFileName.c_str());
+			if (currentDataFile.is_open()) {
+				cout << ++counter << " Processing "<< currentDataFileName << endl;
+				// skip lines that don't contain signal data
+				for (int i=0; i<linesToSkip; i++) {
+					getline(currentDataFile, line);
+				}
+
+				wf->Init(numberOfSignalPoints, currentDataFileName.c_str());
+
+				while (getline(currentDataFile, line)) {
+					sscanf(line.c_str(), "%lf,%lf", &t, &v);
+					wf->AddPoint(t, v);
+				}
+				wf->CalculateParameters();
+				tree->Fill();
+				currentDataFile.close();
+			}
+		}
+		f.close();
+	}
 
 	tree->Write();
 

@@ -17,11 +17,13 @@ public:
 	void Init(int assumedNumberOfPoints);
 	void Init(int assumedNumberOfPoints, const char *fname);
 	void AddPoint(double x, double y);
+	void CalculateParameters();
 
 private:
-	char filename[100];
+	char filename[300];
 	vector<double> time;
 	vector<double> voltage;
+	double amplitude;
 
 	// this is made to add this class to ROOT
 	// see the links below for details:

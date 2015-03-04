@@ -1,5 +1,7 @@
 #include "Waveform.h"
 
+#include <algorithm>
+
 ClassImp(Waveform)
 
 Waveform::Waveform(int assumedNumberOfPoints) {
@@ -17,6 +19,8 @@ void Waveform::Init(int assumedNumberOfPoints) {
 
 	time.reserve(assumedNumberOfPoints);
 	voltage.reserve(assumedNumberOfPoints);
+
+	amplitude = 0.;
 }
 
 void Waveform::Init(int assumedNumberOfPoints, const char *fname) {
@@ -33,3 +37,9 @@ void Waveform::AddPoint(double x, double y)
 	time.push_back(x);
 	voltage.push_back(y);
 }
+
+void Waveform::CalculateParameters()
+{
+	amplitude = *max_element(voltage.begin(), voltage.end());
+}
+
