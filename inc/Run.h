@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "TObject.h"
+#include "TList.h"
 
 #include "Waveform.h"
 
@@ -13,10 +14,18 @@ public:
 	virtual ~Run();
 
 	void AddWaveform(Waveform *wf);
+	void TestFill(const double t);
+	void AddWaveform(const int numberOfChannel);
+
+	void Print(Option_t* option = "") const;
 
 private:
 	unsigned int id;
-	vector<Waveform*> waveforms;
+	double testField;
+	TList *waveforms;
+//	vector<Waveform*> waveforms;
+
+	ClassDef(Run, 1)
 };
 
 #endif /* SRC_RUN_H_ */

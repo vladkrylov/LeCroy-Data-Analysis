@@ -9,6 +9,7 @@
 #include "TRandom.h"
 #include "TGraph.h"
 
+#include "Run.h"
 #include "Waveform.h"
 
 using namespace std;
@@ -18,6 +19,8 @@ const int numberOfSignalPoints = 4002;
 
 void testVectorFill(vector<double> &vec, double mean, double sgm);
 void testWaveformFill(Waveform *wf, double mean, double sgm);
+void testRunFill(Run *rn, double mean, double sgm);
+void Test();
 
 int main(int argc, char **argv)
 {
@@ -49,9 +52,12 @@ int main(int argc, char **argv)
 //		tree->Fill();
 //	}
 
+	Run *testRun = new Run();
+	tree->Branch("Runs", "Run", &testRun);
+
 
 	Waveform *wf = new Waveform(numberOfSignalPoints);
-	tree->Branch("Waveforms", "Waveform", &wf);
+//	tree->Branch("Waveforms", "Waveform", &wf);
 
 //	for (double mean=0.; mean<50.2; mean += 0.5) {
 //		wf->Init(numberOfSignalPoints, "test");
@@ -80,6 +86,7 @@ int main(int argc, char **argv)
 					wf->AddPoint(t, v);
 				}
 				wf->CalculateParameters();
+				testRunFill(testRun, 3, 0.7);
 				tree->Fill();
 				currentDataFile.close();
 			}
@@ -89,10 +96,15 @@ int main(int argc, char **argv)
 
 	tree->Write();
 
+	delete testRun;
 	delete tree;
 	delete wf;
 
+	rootFile.Close();
 	cout << "Done." << endl;
+
+	/////////////////////////////////////
+	Test();
 	return 0;
 }
 
@@ -112,4 +124,31 @@ void testWaveformFill(Waveform *wf, double mean, double sgm)
 	for(int i=0; i<1000; i++) {
 		wf->AddPoint(i, r.Gaus(mean, sgm));
 	}
+}
+
+void testRunFill(Run *rn, double mean, double sgm)
+{
+	TRandom r(sgm);
+	double x = r.Gaus(mean, sgm);
+	cout << x << endl;
+	rn->TestFill(x);
+}
+
+void Test() {
+	Run * testRun = new Run();
+
+	TFile check("Data.root");
+	TTree* ctree = (TTree*) (check.Get("T"));
+
+	TBranch* runBranch = ctree->GetBranch("Runs");
+	runBranch->SetAddress(&testRun);
+
+	for (int i = 0; i < ctree->GetEntries(); i++) {
+		ctree->GetEntry(i);
+		testRun->Print();
+	}
+	delete ctree;
+	delete testRun;
+	check.Close();
+//	delete runBranch;
 }
