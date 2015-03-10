@@ -27,7 +27,13 @@ def get_tmp_dir():
         os.makedirs(tmp)
     return tmp
 
-def save_file_list(data_dir=None, out_filename="data_files.txt", patt="C\d+_FBLM_\d+_00000\.txt"):
+def get_channel_number():
+    pass
+
+def save_file_list(data_dir=None, 
+                   out_filename="data_files.txt", 
+                   patt="C\d+_FBLM_\d+_00000\.txt", 
+                   number_of_channels=1):
     """Looks for files in data_dir and its subfolders and
     writes all filenames that matches to patt in tmp_dir/out_filename text file"""
     pat = re.compile(patt)
@@ -46,7 +52,9 @@ if __name__ == "__main__":
     pat = re.compile("C[23]_FBLM_\d+_00000\.txt")
     
     data_dir = None
-    opts, args = getopt.getopt(sys.argv[1:], 'd:', [])
+    number_of_channels = 1;
+    
+    opts, args = getopt.getopt(sys.argv[1:], 'd:noc:', [])
     for o, a in opts:
         if o == '-d':
             if not os.path.exists(a) or not os.path.isdir(a):
@@ -54,8 +62,11 @@ if __name__ == "__main__":
                 print "The full path must be specified as an argument"
             else:
                 data_dir = a
-                
-    save_file_list(data_dir=data_dir, patt=pat)
+        elif o == '-noc':
+            number_of_channels = a
+    
+    print number_of_channels, type(number_of_channels)
+#     save_file_list(data_dir=data_dir, patt=pat, number_of_channels=1)
 
 
 

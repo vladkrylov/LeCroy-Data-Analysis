@@ -1,6 +1,10 @@
 #include "Waveform.h"
 
 #include <algorithm>
+#include <iostream>
+
+#include "TGraph.h"
+#include "TVirtualPad.h"
 
 ClassImp(Waveform)
 
@@ -43,3 +47,18 @@ void Waveform::CalculateParameters()
 	amplitude = *max_element(voltage.begin(), voltage.end());
 }
 
+void Waveform::Browse(TBrowser* b)
+{
+//	size_t length = time.size();
+//	if (length != voltage.size()) {
+//		cout << "Cannot draw the waveform. Time and amplitudes vectors have different size." << endl;
+//		return;
+//	}
+//	TGraph *gr = new TGraph(length);
+//	for(size_t i=0; i<length; i++) {
+//		gr->SetPoint(i, time.at(i), voltage.at(i));
+//	}
+//	gr->Draw();
+//	gPad->Update();
+	cout << "bingo" << endl;
+}

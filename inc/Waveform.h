@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "TObject.h"
+#include "TBrowser.h"
 #include "Rtypes.h"
 
 using namespace std;
@@ -18,6 +19,8 @@ public:
 	void Init(int assumedNumberOfPoints, const char *fname);
 	void AddPoint(double x, double y);
 	void CalculateParameters();
+
+	virtual void Browse(TBrowser* b);
 
 private:
 	char filename[300];
