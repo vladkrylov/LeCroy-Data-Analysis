@@ -8,6 +8,7 @@
 #include "TTree.h"
 #include "TRandom.h"
 #include "TGraph.h"
+#include "TDirectory.h"
 
 #include "Waveform.h"
 
@@ -18,6 +19,7 @@ const int numberOfSignalPoints = 4002;
 
 void testVectorFill(vector<double> &vec, double mean, double sgm);
 void testWaveformFill(Waveform *wf, double mean, double sgm);
+int GetChannelNumber(const char* filename);
 
 int main(int argc, char **argv)
 {
@@ -25,6 +27,7 @@ int main(int argc, char **argv)
 		cout <<"File with list of data files must be specified as an argument"<<endl;
 		return 0;
 	}
+	int p = 1;	// polarity
 
 	char *inpFileName = argv[1];
 	string currentDataFileName;
@@ -33,18 +36,26 @@ int main(int argc, char **argv)
 
 	double t, v;
 
+	TString branchName = "Waveforms";
 	TFile rootFile("Data.root","RECREATE");
 	TTree *tree = new TTree("T","Run tree");
 
-	Waveform *wf = new Waveform(numberOfSignalPoints);
-	tree->Branch("Waveforms", "Waveform", &wf);
+	Waveform *wf = new Waveform(numberOfSignalPoints, p);
+	tree->Branch(branchName.Data(), "Waveform", &wf);
 
-//	for (double mean=0.; mean<50.2; mean += 0.5) {
-//		wf->Init(numberOfSignalPoints, "test");
-//		testWaveformFill(wf, mean, 0.5);
-//		wf->CalculateParameters();
-//		tree->Fill();
+//	TString branchNameBase = "Waveforms";
+//	TString branchName;
+//
+//	int numberOfChannels = 4;
+//	Waveform **wf = new Waveform*[];
+//	for(int i=0; i<numberOfChannels; i++) {
+//		 wf[i] = new Waveform(numberOfSignalPoints);
+//		 branchName = branchNameBase + i;
+//		 tree->Branch(branchName.Data(), "Waveform", &wf[i]);
 //	}
+
+//	rootFile.mkdir("a");
+//	rootFile.cd("a");
 
 	int counter = 0;
 	if (f.is_open()) {
@@ -66,7 +77,7 @@ int main(int argc, char **argv)
 				}
 				wf->CalculateParameters();
 
-//				tree->Fill();
+				tree->Fill();
 				wf->Write();
 				currentDataFile.close();
 			}
@@ -77,6 +88,10 @@ int main(int argc, char **argv)
 	tree->Write();
 
 	delete tree;
+//	for(int i=0; i<numberOfChannels; i++) {
+//		delete wf[i];
+//	}
+//	delete[] wf;
 	delete wf;
 
 	rootFile.Close();
@@ -85,6 +100,13 @@ int main(int argc, char **argv)
 	/////////////////////////////////////
 	return 0;
 }
+
+int GetChannelNumber(const char* filename)
+{
+
+	return 0;
+}
+
 
 void testVectorFill(vector<double> &vec, double mean, double sgm)
 {

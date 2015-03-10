@@ -6,13 +6,14 @@
 #include "TObject.h"
 #include "TBrowser.h"
 #include "Rtypes.h"
+#include "TGraph.h"
 
 using namespace std;
 
 class Waveform : public TObject {
 public:
 	Waveform(int assumedNumberOfPoints = 0);
-	Waveform(int assumedNumberOfPoints, const char *fname);
+	Waveform(int assumedNumberOfPoints, int pol);
 	virtual ~Waveform();
 
 	void Init(int assumedNumberOfPoints);
@@ -24,10 +25,14 @@ public:
 
 private:
 	char filename[300];
+	int polarity;
+
 	vector<double> time;
 	vector<double> voltage;
+
 	double amplitude;
 
+	TGraph* gr; //! Transient
 	// this is made to add this class to ROOT
 	// see the links below for details:
 	//

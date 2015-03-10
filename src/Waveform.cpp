@@ -10,11 +10,12 @@ ClassImp(Waveform)
 
 Waveform::Waveform(int assumedNumberOfPoints) : TObject() {
 	Init(assumedNumberOfPoints);
+	polarity = +1;
 }
 
-Waveform::Waveform(int assumedNumberOfPoints, const char *fname) {
+Waveform::Waveform(int assumedNumberOfPoints, int pol) {
 	Init(assumedNumberOfPoints);
-	strcpy(filename, fname);
+	polarity = pol;
 }
 
 void Waveform::Init(int assumedNumberOfPoints) {
@@ -23,8 +24,10 @@ void Waveform::Init(int assumedNumberOfPoints) {
 
 	time.reserve(assumedNumberOfPoints);
 	voltage.reserve(assumedNumberOfPoints);
+	time.push_back(0.); // this is done to carefully substract time[0] from all others time points
 
 	amplitude = 0.;
+	gr = new TGraph();
 }
 
 void Waveform::Init(int assumedNumberOfPoints, const char *fname) {
@@ -34,11 +37,12 @@ void Waveform::Init(int assumedNumberOfPoints, const char *fname) {
 
 Waveform::~Waveform() {
 	// TODO Auto-generated destructor stub
+	delete gr;
 }
 
 void Waveform::AddPoint(double x, double y)
 {
-	time.push_back(x);
+	time.push_back(x - time.at(0));
 	voltage.push_back(y);
 }
 
@@ -49,16 +53,18 @@ void Waveform::CalculateParameters()
 
 void Waveform::Browse(TBrowser* b)
 {
-//	size_t length = time.size();
-//	if (length != voltage.size()) {
-//		cout << "Cannot draw the waveform. Time and amplitudes vectors have different size." << endl;
-//		return;
-//	}
-//	TGraph *gr = new TGraph(length);
-//	for(size_t i=0; i<length; i++) {
-//		gr->SetPoint(i, time.at(i), voltage.at(i));
-//	}
-//	gr->Draw();
-//	gPad->Update();
-	cout << "bingo" << endl;
+	size_t N = time.size();
+
+	if (N != voltage.size()) {
+		cout << "Cannot draw the waveform. Time and amplitudes vectors have different size." << endl;
+		return;
+	}
+
+	gr->Set(N);
+	for(size_t i=0; i<N; i++) {
+		gr->SetPoint(i, time[i], voltage[i]);
+	}
+	gr->Draw("AL");
+//	cout << "bingo" << endl;
 }
+

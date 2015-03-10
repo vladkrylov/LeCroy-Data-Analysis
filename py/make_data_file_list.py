@@ -49,7 +49,7 @@ def save_file_list(data_dir=None,
  
        
 if __name__ == "__main__":
-    pat = re.compile("C[23]_FBLM_\d+_00000\.txt")
+    pat = re.compile("C[2]_FBLM_\d+_00000\.txt")
     
     data_dir = None
     number_of_channels = 1;
