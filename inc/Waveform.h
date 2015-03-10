@@ -20,6 +20,7 @@ public:
 	void Init(int assumedNumberOfPoints, const char *fname);
 	void AddPoint(double x, double y);
 	void CalculateParameters();
+	void RemoveTimeOffset();
 
 	virtual void Browse(TBrowser* b);
 

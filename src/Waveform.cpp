@@ -24,7 +24,6 @@ void Waveform::Init(int assumedNumberOfPoints) {
 
 	time.reserve(assumedNumberOfPoints);
 	voltage.reserve(assumedNumberOfPoints);
-	time.push_back(0.); // this is done to carefully substract time[0] from all others time points
 
 	amplitude = 0.;
 	gr = new TGraph();
@@ -42,12 +41,13 @@ Waveform::~Waveform() {
 
 void Waveform::AddPoint(double x, double y)
 {
-	time.push_back(x - time.at(0));
+	time.push_back(x);
 	voltage.push_back(y);
 }
 
 void Waveform::CalculateParameters()
 {
+	RemoveTimeOffset();
 	amplitude = *max_element(voltage.begin(), voltage.end());
 }
 
@@ -62,9 +62,20 @@ void Waveform::Browse(TBrowser* b)
 
 	gr->Set(N);
 	for(size_t i=0; i<N; i++) {
-		gr->SetPoint(i, time[i], voltage[i]);
+		gr->SetPoint(i, time.at(i), voltage.at(i));
 	}
 	gr->Draw("AL");
 //	cout << "bingo" << endl;
 }
+
+void Waveform::RemoveTimeOffset()
+{
+	double o = time.at(0);
+	if (!time.empty()) {
+		for(size_t i=0; i<time.size(); i++) {
+			time.at(i) -= o;
+		}
+	}
+}
+
 

@@ -46,10 +46,11 @@ def save_file_list(data_dir=None,
             
     with open(os.path.join(get_tmp_dir(), "data_files.txt"), 'w') as tmp:
         tmp.write('\n'.join(data_files_list))
+        print "Written %d filenames to %s" % (len(data_files_list), tmp.name)
  
        
 if __name__ == "__main__":
-    pat = re.compile("C[2]_FBLM_\d+_00000\.txt")
+    pat = re.compile("C2_FBLM_\d+_00000\.txt")
     
     data_dir = None
     number_of_channels = 1;
@@ -65,8 +66,7 @@ if __name__ == "__main__":
         elif o == '-noc':
             number_of_channels = a
     
-    print number_of_channels, type(number_of_channels)
-#     save_file_list(data_dir=data_dir, patt=pat, number_of_channels=1)
+    save_file_list(data_dir=data_dir, patt=pat, number_of_channels=1)
 
 
 
