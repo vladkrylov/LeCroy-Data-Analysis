@@ -1,0 +1,13 @@
+.*
+!.gitignore
+
+Debug/
+/lib/*
+!/lib/Makefile
+!/lib/LinkDef.h
+
+/tmp
+/test_data
+
+*.root
+*.[oa]
