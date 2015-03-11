@@ -19,12 +19,14 @@ const int numberOfSignalPoints = 4002;
 
 int main(int argc, char **argv)
 {
-	if (argc < 2) {
+	if (argc < 3) {
+		// FIXME
 		cout <<"File with list of data files must be specified as an argument"<<endl;
 		return 0;
 	}
 
 	char *inpFileName = argv[1];
+	char *outRootFileName = argv[2];
 	int polarity = 1;
 
 	string currentDataFileName;
@@ -35,7 +37,7 @@ int main(int argc, char **argv)
 
 	Waveform *wf = new Waveform(numberOfSignalPoints, polarity);
 
-	TFile rootFile("Data.root","RECREATE");
+	TFile rootFile(outRootFileName,"RECREATE");
 	TTree *tree = new TTree("T","An example of a ROOT tree");
 
 	double amplitude;
@@ -47,7 +49,7 @@ int main(int argc, char **argv)
 		while ( getline(f, currentDataFileName) ) {
 			ifstream currentDataFile(currentDataFileName.c_str());
 			if (currentDataFile.is_open()) {
-				cout << ++counter << " Processing "<< currentDataFileName << endl;
+//				cout << ++counter << " Processing "<< currentDataFileName << endl;
 				// skip lines that don't contain signal data
 				for (int i=0; i<linesToSkip; i++) {
 					getline(currentDataFile, line);

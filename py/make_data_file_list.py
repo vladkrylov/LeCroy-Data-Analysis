@@ -27,7 +27,7 @@ def get_tmp_dir():
         os.makedirs(tmp)
     return tmp
 
-def save_file_list(data_dir=None, out_filename="data_files.txt", patt="C\d+_FBLM_\d+_00000\.txt"):
+def save_file_list(data_dir=None, out_filename="data_files.txt", patt="C2_FBLM_\d+_00000\.txt"):
     """Looks for files in data_dir and its subfolders and
     writes all filenames that matches to patt in tmp_dir/out_filename text file"""
     pat = re.compile(patt)
@@ -41,7 +41,7 @@ def save_file_list(data_dir=None, out_filename="data_files.txt", patt="C\d+_FBLM
             
     with open(os.path.join(get_tmp_dir(), "data_files.txt"), 'w') as tmp:
         tmp.write('\n'.join(data_files_list))
-        print "%d filenames written to %s" % (len(data_files_list), tmp.name)
+        print "%s:\t %d filenames written to %s" % (data_dir, len(data_files_list), tmp.name)
  
        
 if __name__ == "__main__":
@@ -53,11 +53,10 @@ if __name__ == "__main__":
         if o == '-d':
             if not os.path.exists(a) or not os.path.isdir(a):
                 print "Wrong path to data specified"
-                print "The full path must be specified as an argument"
             else:
                 data_dir = a
-                
-    save_file_list(data_dir=data_dir, patt=pat)
+                save_file_list(data_dir=data_dir, patt=pat)
+    
 
 
 
