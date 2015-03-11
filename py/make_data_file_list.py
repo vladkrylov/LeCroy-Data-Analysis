@@ -31,9 +31,10 @@ def save_file_list(data_dir=None, out_filename="data_files.txt", patt="C\d+_FBLM
     """Looks for files in data_dir and its subfolders and
     writes all filenames that matches to patt in tmp_dir/out_filename text file"""
     pat = re.compile(patt)
-    if not data_dir:
-        data_dir = os.getcwd()
-    
+    if not os.path.isdir(data_dir):
+        data_dir = os.path.join(os.getcwd(), data_dir)
+
+    data_dir = os.path.abspath(data_dir)           
     data_files_list = [];
     for path, subdirs, files in os.walk(data_dir):
         data_files_list.extend([os.path.join(path, name) for name in files if pat.match(name)]) 
