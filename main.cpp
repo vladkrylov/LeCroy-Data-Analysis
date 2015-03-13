@@ -27,7 +27,7 @@ int main(int argc, char **argv)
 
 	char *inpFileName = argv[1];
 	char *outRootFileName = argv[2];
-	int polarity = 1;
+	int polarity = -1;
 
 	string currentDataFileName;
 	string line;

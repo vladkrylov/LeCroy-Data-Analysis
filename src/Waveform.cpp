@@ -85,6 +85,10 @@ double Waveform::GetAmplitude() const
 
 void Waveform::CalculateAmplitude()
 {
-	amplitude = *max_element(voltage.begin(), voltage.end());
+	if (polarity > 0) {
+		amplitude = *max_element(voltage.begin(), voltage.end());
+	} else {
+		amplitude = *min_element(voltage.begin(), voltage.end());
+	}
 }
 

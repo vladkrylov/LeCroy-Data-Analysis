@@ -10,7 +10,8 @@ if __name__ == "__main__":
     experiment_dir = None
     baseline_run_id = 21
     
-    rootfile_pat = re.compile(".*(Run\d+).*")
+    rootfile_base = 'Run'
+#     rootfile_pat = re.compile(".*(%s\d+).*" % rootfile_base)
     exe = os.path.join(get_proj_dir(), "Debug/LeetechDataAnalysis")
     temp_list_file = os.path.join(get_tmp_dir(), "data_files.txt")
     
@@ -26,7 +27,7 @@ if __name__ == "__main__":
     if not os.path.isdir(rootfiles_dir):
         os.mkdir(rootfiles_dir)
     
-    run_dirs = [d for d in os.listdir(experiment_dir)]
+    run_dirs = [d for d in os.listdir(experiment_dir) if rootfile_base in d]
     
     for d in run_dirs:
         save_file_list(data_dir=os.path.join(experiment_dir, d), out_filename=temp_list_file)
