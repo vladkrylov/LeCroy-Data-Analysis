@@ -13,7 +13,7 @@ all: generate_dict obj
 	g++ -shared $(CPPFLAGS) $(LDFLAGS) WaveformDict.o Waveform.o -o $(name)
 	
 generate_dict: clean
-	rootcint WaveformDict.cxx -c ../inc/Waveform.h
+	rootcint WaveformDict.cpp -c ../inc/Waveform.h
 
 obj:
 	g++ $(CPPFLAGS) -c -fpic WaveformDict.cxx

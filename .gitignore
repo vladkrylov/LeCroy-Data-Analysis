@@ -2,6 +2,7 @@
 !.gitignore
 
 Debug/
+/bin/*
 /lib/*
 !/lib/Makefile
 !/lib/LinkDef.h
@@ -11,3 +12,4 @@ Debug/
 
 *.root
 *.[oa]
+*.pyc

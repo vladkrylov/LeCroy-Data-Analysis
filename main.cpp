@@ -29,6 +29,10 @@ int main(int argc, char **argv)
 	char *outRootFileName = argv[2];
 	int polarity = -1;
 
+	// generate .root file name for waveforms storage
+//	string waveformsRootFileName = outRootFileName;
+//	waveformsRootFileName.insert(waveformsRootFileName.find(".root"), "_Waveforms");
+
 	string currentDataFileName;
 	string line;
 	ifstream f(inpFileName);
@@ -38,6 +42,9 @@ int main(int argc, char **argv)
 	Waveform *wf = new Waveform(numberOfSignalPoints, polarity);
 
 	TFile rootFile(outRootFileName,"RECREATE");
+	rootFile.mkdir("Waveforms", "Waveforms");
+	rootFile.cd("Waveforms");
+//	TFile wfRootFile(waveformsRootFileName.c_str(),"RECREATE");
 	TTree *tree = new TTree("T","An example of a ROOT tree");
 
 	double amplitude;
@@ -75,6 +82,7 @@ int main(int argc, char **argv)
 		f.close();
 	}
 
+	rootFile.cd();
 	tree->Write();
 	cout << "Done." << endl;
 	return 0;
