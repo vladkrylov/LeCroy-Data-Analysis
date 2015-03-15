@@ -37,3 +37,13 @@ double GetMean(const char* fileName, const char* branchName)
 	double res = h->GetMean();
 	return res;
 }
+
+float GetParameter(TTree* t, const char* name)
+{
+	float res;
+	t->SetBranchAddress(name, &res);
+	t->GetEntry(0);
+	return res;
+}
+
+

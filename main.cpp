@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
+#include <sstream>
 
 #include "TFile.h"
 #include "TTree.h"
@@ -19,7 +20,7 @@ const int numberOfSignalPoints = 4002;
 
 int main(int argc, char **argv)
 {
-	if (argc < 3) {
+	if (argc < 4) {
 		// FIXME
 		cout <<"File with list of data files must be specified as an argument"<<endl;
 		return 0;
@@ -27,11 +28,8 @@ int main(int argc, char **argv)
 
 	char *inpFileName = argv[1];
 	char *outRootFileName = argv[2];
+	char *infoFileName = argv[3];
 	int polarity = -1;
-
-	// generate .root file name for waveforms storage
-//	string waveformsRootFileName = outRootFileName;
-//	waveformsRootFileName.insert(waveformsRootFileName.find(".root"), "_Waveforms");
 
 	string currentDataFileName;
 	string line;
@@ -44,8 +42,7 @@ int main(int argc, char **argv)
 	TFile rootFile(outRootFileName,"RECREATE");
 	rootFile.mkdir("Waveforms", "Waveforms");
 	rootFile.cd("Waveforms");
-//	TFile wfRootFile(waveformsRootFileName.c_str(),"RECREATE");
-	TTree *tree = new TTree("T","An example of a ROOT tree");
+	TTree *tree = new TTree("T","Data tree");
 
 	double amplitude;
 	tree->Branch("amplitude", &amplitude);
@@ -84,6 +81,38 @@ int main(int argc, char **argv)
 
 	rootFile.cd();
 	tree->Write();
+
+	/**--------------------------------------------------------------------------
+	 * Here we add another tree to .root file that contains all the additional
+	 * information about the current run if corresponded .yaml file was provided
+	 * in argv arguments
+	 *---------------------------------------------------------------------------
+	 */
+	char parName[30];
+	float parValue;
+	ifstream info(infoFileName);
+	vector<float> paramsValues;
+	paramsValues.reserve(32);
+	TBranch *tb;
+
+	int paramsCounter = 0;
+
+	if (info.is_open()) {
+		cout << "open" << endl;
+		TTree *infoTree = new TTree("Info","Run info tree");
+		while ( getline(info, line) ) {
+			sscanf(line.c_str(), "%[^:]: %f", parName, &parValue);
+			paramsValues.push_back(parValue);
+			cout << parName << " --> " << parValue << endl;
+
+			tb = infoTree->Branch(parName, &paramsValues.at(paramsCounter));
+			tb->Fill();
+			paramsCounter++;
+		}
+		infoTree->Fill();
+		infoTree->Write();
+	}
+
 	cout << "Done." << endl;
 	return 0;
 }

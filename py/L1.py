@@ -12,7 +12,7 @@ if __name__ == "__main__":
     experiment_dir = None
     baseline_run_id = 21
     
-    rootfile_base = 'Run'
+    rootfile_base = 'Run10'
 #     rootfile_pat = re.compile(".*(%s\d+).*" % rootfile_base)
 #     exe = os.path.join(get_proj_dir(), "Debug/LeetechDataAnalysis")
     exe = os.path.join(get_proj_dir(), "bin/croyana")
@@ -33,10 +33,12 @@ if __name__ == "__main__":
     run_dirs = [d for d in os.listdir(experiment_dir) if rootfile_base in d]
     
     for d in run_dirs:
-        save_file_list(data_dir=os.path.join(experiment_dir, d), out_filename=temp_list_file)
+        run_dir = os.path.join(experiment_dir, d)
+        save_file_list(data_dir=run_dir, out_filename=temp_list_file)
+        info_file = os.path.join(run_dir, 'run_info.yaml')
         
         out_rootfile = os.path.join(rootfiles_dir, "%s.root" % d)
-        call([exe, temp_list_file, out_rootfile])
+        call([exe, temp_list_file, out_rootfile, info_file])
         
 #         add_run_info(out_rootfile)
         
