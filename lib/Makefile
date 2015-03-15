@@ -16,7 +16,7 @@ generate_dict: clean
 	rootcint WaveformDict.cpp -c ../inc/Waveform.h
 
 obj:
-	g++ $(CPPFLAGS) -c -fpic WaveformDict.cxx
+	g++ $(CPPFLAGS) -c -fpic WaveformDict.cpp
 	g++ $(CPPFLAGS) -c -fpic ../src/Waveform.cpp
 	
 clean:

@@ -3,18 +3,19 @@ void L2()
 	TString filename_pre = "/home/vlad/Program_Files/Eclipse/g45work/LeetechDataAnalysis/test_data/ROOT_files/Run";
 	TString filename_post = ".root";
 	TString filename;
-	char* branchName = "amplitude";
+	char* xbranchName = "magnet_current";
+	char* ybranchName = "amplitude";
 
-	const int N = 19;
-	double currents[N] = {7.5, 7.2, 7.0, 6.8, 6.6, 6.4, 6.2, 6.0, 5.8, 5.6, 5.4, 5.2, 5.0, 4.8, 4.6, 4.4, 4.2, 4.0, 3.8};
-	double amps[N];
+	const int N = 18;
+	Double_t currents[N];
+	Double_t amps[N];
 
-	for(int i=1; i<N; i++) {
+	for(int i=0; i<N; i++) {
 		filename = filename_pre;
-		filename += i+1;
+		filename += i+2;
 		filename += filename_post;
 
-		amps[i] = -GetMean(filename.Data(), branchName);
+		GetPoint(filename.Data(), xbranchName, ybranchName, currents[i], amps[i]);
 
 		cout << currents[i] << "\t";
 		cout << amps[i] << endl;
@@ -23,27 +24,33 @@ void L2()
 	gr->Draw("ALP");
 }
 
-double GetMean(const char* fileName, const char* branchName)
+void GetPoint(const char* fileName, const char* xbranchName, const char* ybranchName, Double_t &x, Double_t &y)
 {
 	TFile *f = new TFile(fileName);
 	TTree *t1 = (TTree*)f->Get("T");
-	Double_t y;
+	Double_t ty;
 	TH1F *h = new TH1F("test", "test", 200, -10, 10);
-	t1->SetBranchAddress(branchName, &y);
+	t1->SetBranchAddress(ybranchName, &ty);
 	for (int i=0; i<t1->GetEntries(); i++) {
 		t1->GetEntry(i);
-		h->Fill(y);
+		h->Fill(ty);
 	}
-	double res = h->GetMean();
-	return res;
+	y = h->GetMean();
+
+	// get the current through the magnet and polarity
+	Float_t tmpx, tmpp;
+	TTree *t2 = (TTree*)f->Get("Info");
+
+	t2->SetBranchAddress("polarity", &tmpp);
+	t2->SetBranchAddress(xbranchName, &tmpx);
+
+	t2->GetEntry(0);
+	x = tmpx;
+	if (tmpp < 0) {
+		y = -y;
+	}
+
 }
 
-float GetParameter(TTree* t, const char* name)
-{
-	float res;
-	t->SetBranchAddress(name, &res);
-	t->GetEntry(0);
-	return res;
-}
 
 

@@ -36,6 +36,12 @@ private:
 
 	double amplitude;
 
+	// parameters of the signal
+	int signal_begin_index;
+	int signal_end_index;
+	int baseline1_end_index;
+	int baseline2_end_index;
+
 	TGraph* gr; //! Transient
 	// this is made to add this class to ROOT
 	// see the links below for details:

@@ -5,6 +5,7 @@
 
 #include "TGraph.h"
 #include "TVirtualPad.h"
+#include "TPad.h"
 
 ClassImp(Waveform)
 
@@ -53,6 +54,12 @@ void Waveform::CalculateParameters()
 
 void Waveform::Browse(TBrowser* b)
 {
+	TVirtualPad *p;
+	p = gPad;
+	gPad->cd(0);
+	gPad->Clear();
+	gPad->Divide(1,2);
+	gPad->cd(1);
 	size_t N = time.size();
 
 	if (N != voltage.size()) {
@@ -66,6 +73,8 @@ void Waveform::Browse(TBrowser* b)
 	}
 	gr->Draw("AL");
 //	cout << "bingo" << endl;
+
+	gPad = p;
 }
 
 void Waveform::RemoveTimeOffset()

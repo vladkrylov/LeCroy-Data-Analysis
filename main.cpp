@@ -40,6 +40,44 @@ int main(int argc, char **argv)
 	Waveform *wf = new Waveform(numberOfSignalPoints, polarity);
 
 	TFile rootFile(outRootFileName,"RECREATE");
+
+	/**--------------------------------------------------------------------------
+	 * Here we add another tree to .root file that contains all the additional
+	 * information about the current run if corresponded .yaml file was provided
+	 * in argv arguments
+	 *---------------------------------------------------------------------------
+	 */
+	char parName[30];
+	float parValue;
+	ifstream info(infoFileName);
+	vector<float> paramsValues;
+	paramsValues.reserve(32);
+	TBranch *tb;
+
+	int paramsCounter = 0;
+
+	if (info.is_open()) {
+		TTree *infoTree = new TTree("Info","Run info tree");
+		while ( getline(info, line) ) {
+			sscanf(line.c_str(), "%[^:]: %f", parName, &parValue);
+			paramsValues.push_back(parValue);
+//			cout << parName << " --> " << parValue << endl;
+
+			tb = infoTree->Branch(parName, &paramsValues.at(paramsCounter));
+			tb->Fill();
+			paramsCounter++;
+		}
+		infoTree->Fill();
+		infoTree->Write();
+	}
+
+
+	/*------------------------------------------------------------------------------
+	 * Here we process all the waveforms and write to .root file their parameters
+	 * Also if specified we write all the waveforms as objects to separate directory
+	 * in the same .root file
+	 *------------------------------------------------------------------------------
+	 */
 	rootFile.mkdir("Waveforms", "Waveforms");
 	rootFile.cd("Waveforms");
 	TTree *tree = new TTree("T","Data tree");
@@ -81,37 +119,6 @@ int main(int argc, char **argv)
 
 	rootFile.cd();
 	tree->Write();
-
-	/**--------------------------------------------------------------------------
-	 * Here we add another tree to .root file that contains all the additional
-	 * information about the current run if corresponded .yaml file was provided
-	 * in argv arguments
-	 *---------------------------------------------------------------------------
-	 */
-	char parName[30];
-	float parValue;
-	ifstream info(infoFileName);
-	vector<float> paramsValues;
-	paramsValues.reserve(32);
-	TBranch *tb;
-
-	int paramsCounter = 0;
-
-	if (info.is_open()) {
-		cout << "open" << endl;
-		TTree *infoTree = new TTree("Info","Run info tree");
-		while ( getline(info, line) ) {
-			sscanf(line.c_str(), "%[^:]: %f", parName, &parValue);
-			paramsValues.push_back(parValue);
-			cout << parName << " --> " << parValue << endl;
-
-			tb = infoTree->Branch(parName, &paramsValues.at(paramsCounter));
-			tb->Fill();
-			paramsCounter++;
-		}
-		infoTree->Fill();
-		infoTree->Write();
-	}
 
 	cout << "Done." << endl;
 	return 0;
