@@ -34,6 +34,8 @@ private:
 	vector<double> time;
 	vector<double> voltage;
 
+	vector<double> processed_voltage;
+
 	double amplitude;
 
 	// parameters of the signal
@@ -43,6 +45,9 @@ private:
 	int baseline2_end_index;
 
 	TGraph* gr; //! Transient
+	TGraph* gr_processed; //! Transient
+	void Process();
+
 	// this is made to add this class to ROOT
 	// see the links below for details:
 	//
