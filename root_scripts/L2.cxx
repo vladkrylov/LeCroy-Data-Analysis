@@ -1,18 +1,42 @@
 void L2()
 {
-	TString filename_pre = "/home/vlad/Program_Files/Eclipse/g45work/LeetechDataAnalysis/test_data/ROOT_files/Run";
-	TString filename_post = ".root";
-	TString filename;
+	/* B scan 4 mm */
+//	TString filename_pre = "/run/media/vlad/00789D9D789D91D0/Leetech/RawData/Beamtime2_24-27.02.2015/B_scan_4mm/ROOT_files/Run";
+//	char* xbranchName = "magnet_current";
+//	char* ybranchName = "amplitude";
+//	int startRun = 2;
+//	const int N = 15;
+
+	/* B scan 6mm */
+	TString filename_pre = "/run/media/vlad/00789D9D789D91D0/Leetech/RawData/Beamtime2_24-27.02.2015/B_scan_6mm/ROOT_files/Run";
 	char* xbranchName = "magnet_current";
 	char* ybranchName = "amplitude";
+	int startRun = 1;
+	const int N = 15;
 
-	const int N = 18;
+	/* Exit1_dX_scan_4mm */
+//	TString filename_pre = "/run/media/vlad/00789D9D789D91D0/Leetech/RawData/Beamtime2_24-27.02.2015/Exit1_dX_scan_4mm/ROOT_files/Run";
+//	char* xbranchName = "coll_exit1_dX";
+//	char* ybranchName = "amplitude";
+//	int startRun = 23;
+//	const int N = 13;
+
+	/* Exit1_dY_scan_4mm */
+//	TString filename_pre = "/run/media/vlad/00789D9D789D91D0/Leetech/RawData/Beamtime2_24-27.02.2015/Exit1_dY_scan_4mm/ROOT_files/Run";
+//	char* xbranchName = "coll_exit1_dY";
+//	char* ybranchName = "amplitude";
+//	int startRun = 37;
+//	const int N = 7;
+
+	TString filename_post = ".root";
+	TString filename;
+
 	Double_t currents[N];
 	Double_t amps[N];
 
 	for(int i=0; i<N; i++) {
 		filename = filename_pre;
-		filename += i+2;
+		filename += i + startRun;
 		filename += filename_post;
 
 		GetPoint(filename.Data(), xbranchName, ybranchName, currents[i], amps[i]);
@@ -21,7 +45,9 @@ void L2()
 		cout << amps[i] << endl;
 	}
 	TGraph *gr = new TGraph(N, currents, amps);
-	gr->Draw("ALP");
+	gr->Draw("AC*");
+	gr->GetXaxis()->SetLimits(0,11.);
+	gr->GetYaxis()->SetRangeUser(0,0.018);
 }
 
 void GetPoint(const char* fileName, const char* xbranchName, const char* ybranchName, Double_t &x, Double_t &y)

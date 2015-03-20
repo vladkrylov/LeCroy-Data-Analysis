@@ -6,7 +6,6 @@ import getopt
 from subprocess import call
 
 from make_data_file_list import save_file_list, get_tmp_dir, get_proj_dir
-# from run_info import add_run_info
 
 if __name__ == "__main__":
     experiment_dir = None

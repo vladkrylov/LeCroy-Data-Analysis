@@ -6,6 +6,7 @@
 #include "TGraph.h"
 #include "TVirtualPad.h"
 #include "TPad.h"
+#include "TAxis.h"
 
 ClassImp(Waveform)
 
@@ -91,6 +92,10 @@ void Waveform::Browse(TBrowser* b)
 		gr_processed->SetTitle("Processed signal");
 	}
 	gPad = p;
+
+	/**/
+	TAxis *ay = gr->GetYaxis();
+	cout << ay->GetXmax() << "\t" << ay->GetXmin() << endl;
 }
 
 void Waveform::RemoveTimeOffset()

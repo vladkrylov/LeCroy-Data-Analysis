@@ -39,6 +39,7 @@ def save_file_list(data_dir=None, out_filename="data_files.txt", patt="C2_FBLM_\
     for path, subdirs, files in os.walk(data_dir):
         data_files_list.extend([os.path.join(path, name) for name in files if pat.match(name)]) 
             
+    data_files_list.sort(cmp=None, key=None, reverse=False)
     with open(os.path.join(get_tmp_dir(), "data_files.txt"), 'w') as tmp:
         tmp.write('\n'.join(data_files_list))
         print "%s:\t %d filenames written to %s" % (data_dir, len(data_files_list), tmp.name)
