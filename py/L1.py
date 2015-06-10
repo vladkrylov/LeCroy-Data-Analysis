@@ -11,7 +11,7 @@ if __name__ == "__main__":
     experiment_dir = None
     baseline_run_id = 21
     
-    rootfile_base = 'Run10'
+    rootfile_base = 'Run'
 #     rootfile_pat = re.compile(".*(%s\d+).*" % rootfile_base)
 #     exe = os.path.join(get_proj_dir(), "Debug/LeetechDataAnalysis")
     exe = os.path.join(get_proj_dir(), "bin/croyana")

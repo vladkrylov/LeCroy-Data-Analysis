@@ -8,11 +8,11 @@ void L2()
 //	const int N = 15;
 
 	/* B scan 6mm */
-	TString filename_pre = "/run/media/vlad/00789D9D789D91D0/Leetech/RawData/Beamtime2_24-27.02.2015/B_scan_6mm/ROOT_files/Run";
-	char* xbranchName = "magnet_current";
-	char* ybranchName = "amplitude";
-	int startRun = 1;
-	const int N = 15;
+//	TString filename_pre = "/run/media/vlad/00789D9D789D91D0/Leetech/RawData/Beamtime2_24-27.02.2015/B_scan_6mm/ROOT_files/Run";
+//	char* xbranchName = "magnet_current";
+//	char* ybranchName = "amplitude";
+//	int startRun = 1;
+//	const int N = 15;
 
 	/* Exit1_dX_scan_4mm */
 //	TString filename_pre = "/run/media/vlad/00789D9D789D91D0/Leetech/RawData/Beamtime2_24-27.02.2015/Exit1_dX_scan_4mm/ROOT_files/Run";
@@ -22,11 +22,11 @@ void L2()
 //	const int N = 13;
 
 	/* Exit1_dY_scan_4mm */
-//	TString filename_pre = "/run/media/vlad/00789D9D789D91D0/Leetech/RawData/Beamtime2_24-27.02.2015/Exit1_dY_scan_4mm/ROOT_files/Run";
-//	char* xbranchName = "coll_exit1_dY";
-//	char* ybranchName = "amplitude";
-//	int startRun = 37;
-//	const int N = 7;
+	TString filename_pre = "/run/media/vlad/00789D9D789D91D0/Leetech/RawData/Beamtime2_24-27.02.2015/Exit1_dY_scan_4mm/ROOT_files/Run";
+	char* xbranchName = "coll_exit1_dY";
+	char* ybranchName = "amplitude";
+	int startRun = 37;
+	const int N = 7;
 
 	TString filename_post = ".root";
 	TString filename;
@@ -46,8 +46,25 @@ void L2()
 	}
 	TGraph *gr = new TGraph(N, currents, amps);
 	gr->Draw("AC*");
-	gr->GetXaxis()->SetLimits(0,11.);
-	gr->GetYaxis()->SetRangeUser(0,0.018);
+
+	gr->SetLineColor(2);
+	gr->SetLineWidth(3);
+	gr->SetMarkerColor(4);
+	gr->SetMarkerSize(1.6);
+	gr->SetMarkerStyle(21);
+	gr->SetTitle("");
+
+	gr->GetXaxis()->SetTitle("Collimator opening, mm");
+//	gr->GetXaxis()->SetLabelSize(0.05);
+//	gr->GetXaxis()->SetTitleSize(0.05);
+//	gr->GetXaxis()->SetTitleOffset(1.2);
+
+	gr->GetYaxis()->SetTitle("Signal amplitude, a.u.");
+//	gr->GetYaxis()->SetLabelSize(0.05);
+
+
+//	gr->GetXaxis()->SetLimits(0,11.);
+//	gr->GetYaxis()->SetRangeUser(0,0.018);
 }
 
 void GetPoint(const char* fileName, const char* xbranchName, const char* ybranchName, Double_t &x, Double_t &y)
